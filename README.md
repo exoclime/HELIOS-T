@@ -16,6 +16,27 @@ HELIOS-T is developed for use with Python 3 and requires the following packages:
 - scipy
 - matplotlib
 
+## PyMultinest
+
+As the ```loglike``` function in ```ns_setup.py``` includes the additional argument ```loglike_args```, this must be added inside PyMultinest. In the ```run.py``` script, line 213 must be edited to read:
+
+```
+return LogLikelihood(cube, ndim, nparams, loglike_args)
+```
+
+Then ```loglike_args``` must also be added as an argument to the ```run``` function, e.g. line 66 should read:
+
+```
+def run(LogLikelihood,
+	Prior,
+	n_dims, 
+	n_params = None,
+	loglike_args = None,
+	n_clustering_params = ...
+```
+
+Line 198 should be changed to ```nargs = 4``` and 204 to ```if nargs == 5```.
+
 ## Input File
 
 In the ```input.py``` file you can set up HELIOS-T for whatever planet you want. Here is where you put in the planet's name, the gravity (g), the stellar radius, the planet radius and it's uncertainty, and the data. For the data, you have the ```wavelength_bins```, which refers to the edges of the bins, the ```transit_depth```, i.e. (R_p/R_s)^2 in %, and ```transit_depth_error```, the error on these values.
