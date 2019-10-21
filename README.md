@@ -39,7 +39,7 @@ Line 198 should be changed to ```nargs = 4``` and 204 to ```if nargs == 5```.
 
 ## Input File
 
-In the ```input.py``` file you can set up HELIOS-T for whatever planet you want. Here is where you put in the planet's name, the gravity (g), the stellar radius, the planet radius and it's uncertainty, and the data. For the data, you have the ```wavelength_bins```, which refers to the edges of the bins, the ```transit_depth```, i.e. (R_p/R_s)^2 in %, and ```transit_depth_error```, the error on these values.
+In the ```input.py``` file you can set up HELIOS-T for whatever planet you want. Here is where you put in the planet's name, the gravity (g), the stellar radius, the planet radius and it's uncertainty, and the data. For the data, you have the ```wavelength_bins```, which refers to the edges of the bins, the ```transit_depth```, i.e. (R_p/R_s)^2 in %, and ```transit_depth_error```, the error on these values. Since ```wavelength_bins``` takes the bin **edges** (i.e. including the start of the first bin and the end of the last bin), it needs to have length one greater than ```transit_depth```.
 
 The retrieval info section sets up what molecules you want to use in your retrieval, and which parameters to retrieve for. Here there are also the prior ranges. Every parameter is assumed to have a uniform prior, so abundances etc should be retrieved as the log quantities. 
 
