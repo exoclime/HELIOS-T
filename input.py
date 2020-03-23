@@ -39,9 +39,9 @@ res = 5         # resolution used for opacities
 live = 1000     # live points used in nested sampling
 wavenumber=True     # True if opacity given in terms of wavenumber, False if wavelength
 
-priors = {"T": [2800, 100], "log_xh2o": [-13,0], "log_xhcn": [-13,0], "log_xnh3": [-13,0], "log_kappa_cloud": [-14,2],
-          "R0": [2*r0_uncertainty,r0-r0_uncertainty], "log_P0": [-4,3], "log_kappa_0": [-9,-1], "Q0": [99,1], "a": [3,3],
-          "log_r_c": [-6,-1], "log_p_cia": [-3,0]} # priors for all possible parameters
+priors = {"T": [2800, 100], "log_xh2o": [13,-13], "log_xhcn": [13,-13], "log_xnh3": [13,-13], "log_kappa_cloud": [14,-12],
+          "R0": [2*r0_uncertainty,r0-r0_uncertainty], "log_P0": [4,-1], "log_kappa_0": [9,-10], "Q0": [99,1], "a": [3,3],
+          "log_r_c": [6,-7], "log_p_cia": [3,-3]} # priors for all possible parameters
 
 
 
