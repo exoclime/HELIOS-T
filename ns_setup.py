@@ -18,8 +18,8 @@ class Priors:
                 h2o_index = parameters.index('log_xh2o')
                 h2o_abundance = 10**cube[h2o_index]
                 new_lim = np.log10(1-h2o_abundance)
-                diff = priors[param][0] - new_lim
-                cube[i] = cube[i]*diff + new_lim
+                diff = priors[param][0] + new_lim
+                cube[i] = cube[i]*diff + priors[param][1]
             elif param == 'log_xnh3':
                 if 'log_xhcn' in parameters:
                     h2o_index = parameters.index('log_xh2o')
@@ -27,14 +27,14 @@ class Priors:
                     hcn_index = parameters.index('log_xhcn')
                     hcn_abundance = 10**cube[hcn_index]
                     new_lim = np.log10(1 - h2o_abundance - hcn_abundance)
-                    diff = priors[param][0] - new_lim
-                    cube[i] = cube[i] * diff + new_lim
+                    diff = priors[param][0] + new_lim
+                    cube[i] = cube[i] * diff + priors[param][1]
                 else:
                     h2o_index = parameters.index('log_xh2o')
                     h2o_abundance = 10**cube[h2o_index]
                     new_lim = np.log10(1 - h2o_abundance)
-                    diff = priors[param][0] - new_lim
-                    cube[i] = cube[i] * diff + new_lim
+                    diff = priors[param][0] + new_lim
+                    cube[i] = cube[i] * diff + priors[param][1]
 
             else:
                 cube[i] = cube[i]*priors[param][0] + priors[param][1]  # set uniform priors based on values in input
