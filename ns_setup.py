@@ -14,30 +14,7 @@ class Priors:
         for param in parameters:
             i = parameters.index(param)
 
-            if param == 'log_xhcn':             # implementing limit on XH2O + XHCN + XNH3 =< 1
-                h2o_index = parameters.index('log_xh2o')
-                h2o_abundance = 10**cube[h2o_index]
-                new_lim = np.log10(1-h2o_abundance)
-                diff = priors[param][0] + new_lim
-                cube[i] = cube[i]*diff + priors[param][1]
-            elif param == 'log_xnh3':
-                if 'log_xhcn' in parameters:
-                    h2o_index = parameters.index('log_xh2o')
-                    h2o_abundance = 10**cube[h2o_index]
-                    hcn_index = parameters.index('log_xhcn')
-                    hcn_abundance = 10**cube[hcn_index]
-                    new_lim = np.log10(1 - h2o_abundance - hcn_abundance)
-                    diff = priors[param][0] + new_lim
-                    cube[i] = cube[i] * diff + priors[param][1]
-                else:
-                    h2o_index = parameters.index('log_xh2o')
-                    h2o_abundance = 10**cube[h2o_index]
-                    new_lim = np.log10(1 - h2o_abundance)
-                    diff = priors[param][0] + new_lim
-                    cube[i] = cube[i] * diff + priors[param][1]
-
-            else:
-                cube[i] = cube[i]*priors[param][0] + priors[param][1]  # set uniform priors based on values in input
+            cube[i] = cube[i]*priors[param][0] + priors[param][1]  # set uniform priors based on values in input
 
 
 
@@ -46,12 +23,21 @@ class Priors:
             i = parameters.index(param)
             parameter_dict[param] = cube[i]     # set priors
 
-        x = model.Model(loglike_args[0], loglike_args[1], loglike_args[2], parameter_dict, loglike_args[3])
-        ymodel = x.binned_model()
+        mass_fraction = []
+        for molecule in molecules:
+            abundance_name = molecular_abundance_dict[molecule]
+            mass_fraction.append([10**parameter_dict[abundance_name]])
+        mass_fraction = np.array(mass_fraction)
+        mass_total = np.sum(mass_fraction)  # Find sum of molecular abundances
 
+        if mass_total < 1.0:
+            x = model.Model(loglike_args[0], loglike_args[1], loglike_args[2], parameter_dict, loglike_args[3])
+            ymodel = x.binned_model()
 
-        # ymodel = self.model.binned_model(loglike_args[0], loglike_args[1], loglike_args[2], parameter_dict, loglike_args[3])   # evaluate binned model
-        loglikelihood = (-0.5 * ((ymodel - loglike_args[4]) / loglike_args[5])**2 - np.log(abs(loglike_args[5])*np.sqrt(2*np.pi))).sum()     # evaluate loglikelihood
+            loglikelihood = (-0.5 * ((ymodel - loglike_args[4]) / loglike_args[5])**2 - np.log(abs(loglike_args[5])*np.sqrt(2*np.pi))).sum() # evaluate loglikelihood
+
+        else:
+            loglikelihood = -1e30   # If sum > 1, set likelihood to very low value so nested-sampling will exclude the case
+
 
         return loglikelihood
-
